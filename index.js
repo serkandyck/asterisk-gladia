@@ -23,13 +23,36 @@ if (providerName === 'gladia') {
     providerOptions.apiKey = glaApiKey;
 }
 
+// Helper for codec selection in AEAP protocol
+class Codecs {
+  constructor(defaultCodec) { this.selected = defaultCodec; }
+  first(requested) {
+    let name = Array.isArray(requested) ? requested[0] : requested;
+    if (typeof name === 'object') name = name.name;
+    this.selected = { ...this.selected, name };
+    return this.selected;
+  }
+}
+
+// Helper for language selection in AEAP protocol
+class Languages {
+  constructor(defaultLang) { this.selected = defaultLang; }
+  first(requested) {
+    const lang = Array.isArray(requested) ? requested[0] : requested;
+    this.selected = lang;
+    return this.selected;
+  }
+}
+
 server.on("connection", (client) => {
-    dispatch({
-        codecs: { name: "ulaw", sampleRate: 8000, attributes: [] },
-        languages: "en-US",
-        transport: client,
-        provider: getProvider(providerName, providerOptions),
-    });
+  // Build AEAP speech session object
+  const speech = {
+    transport: client,
+    provider: getProvider(providerName, providerOptions),
+    codecs: new Codecs({ name: "ulaw", sampleRate: 8000, attributes: [] }),
+    languages: new Languages("en-US"),
+  };
+  dispatch(speech);
 });
 
 process.on("SIGINT", () => {
