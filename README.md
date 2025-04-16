@@ -62,6 +62,18 @@ If things are configured correctly, and the sample program found here is listeni
 5. The Client disconnects from remote application
 6. The call is hung up.
 
+## AEAP WebSocket Engine Configuration Example
+Configure your AEAP client in `res_aeap_ws.conf` (or `aeap.conf`) for WebSocket transport:
+```ini
+[aeap-demo]
+type=client
+url=ws://127.0.0.1:9099
+codecs=!all,ulaw,alaw,opus
+protocol=speech_to_text
+@language=en-US
+```
+Make sure the section name `[aeap-demo]` matches the engine name used in your dialplan (`SpeechCreate(aeap-demo)`).
+
 ## Other References
 * [Text-to-Speech and Speech-to-Text in Asterisk](https://www.asterisk.org/text-to-speech-and-speech-to-text-in-asterisk/)
 * [Asterisk External Application Protocol: An Intro](https://www.asterisk.org/asterisk-external-application-protocol-an-intro/)
